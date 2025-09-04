@@ -24,17 +24,17 @@ app.secret_key = os.environ.get('SECRET_KEY', secrets.token_hex(32))
 
 # ตั้งค่าการเชื่อมต่อฐานข้อมูล
 # NOTE: ใช้ port 3307 ห้ามแก้กลับเป็น 3306
-import database
 import os
 import database
 
 database.DB_CONFIG.update({
-    'host': os.environ.get('DB_HOST', '127.0.0.1'),
-    'port': int(os.environ.get('DB_PORT', 3307)),
-    'user': os.environ.get('DB_USER', 'root'),
-    'password': os.environ.get('DB_PASSWORD', ''),
-    'database': os.environ.get('DB_NAME', 'tire_shop')
+    'host': os.environ.get('DB_HOST'),
+    'port': int(os.environ.get('DB_PORT')),
+    'user': os.environ.get('DB_USER'),
+    'password': os.environ.get('DB_PASSWORD',''),
+    'database': os.environ.get('DB_NAME')
 })
+
 
 
 
