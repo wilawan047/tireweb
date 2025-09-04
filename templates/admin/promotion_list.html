@@ -1,0 +1,37 @@
+{% extends 'layout.html' %}
+{% block title %}จัดการโปรโมชัน{% endblock %}
+{% block content %}
+<div class="pl-6">
+  <div class="flex flex-col sm:flex-row justify-between items-center gap-4 mb-4">
+    <h1 class="text-xl font-bold text-green-900 w-full sm:w-auto text-center">จัดการโปรโมชัน</h1>
+    <a href="{{ url_for('admin.add_promotion') }}" class="bg-green-500 text-white px-4 py-2 rounded-xl shadow-md hover:bg-green-600 active:bg-green-700 font-semibold transition whitespace-nowrap">+ เพิ่มโปรโมชัน</a>
+  </div>
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+    {% for p in promotions %}
+      <div class="flex flex-col items-center bg-white rounded-xl shadow p-4 border border-gray-200">
+        {% if p.image_url %}
+          <img src="{{ url_for('static', filename='uploads/promotions/' ~ p.image_url) }}" alt="รูปโปรโมชัน" class="w-full h-48 object-contain rounded-lg mb-2 bg-gray-50" />
+        {% else %}
+          <div class="w-full h-48 flex items-center justify-center bg-gray-100 rounded-lg mb-2 text-gray-400">ไม่มีรูป</div>
+        {% endif %}
+        <div class="font-bold text-lg mt-2 mb-1 text-green-900">{{ p.title or '' }}</div>
+        <div class="mb-2 text-gray-700">{{ p.description or '' }}</div>
+        <div class="text-xs text-gray-500 mb-2">
+          {{ p.start_date|date_thai }} - {{ p.end_date|date_thai }}
+        </div>
+        <div class="flex flex-row gap-2 mt-2">
+          <a href="{{ url_for('admin.edit_promotion', promotion_id=p.promotion_id) }}" class="inline-flex items-center px-3 py-1 bg-green-500 text-white rounded-xl shadow-md hover:bg-green-600 active:bg-green-700 font-semibold transition" title="แก้ไข">
+            แก้ไข
+          </a>
+          <form action="{{ url_for('admin.delete_promotion', promotion_id=p.promotion_id) }}" method="post" class="inline" onsubmit="return confirm('คุณต้องการลบโปรโมชันนี้หรือไม่?');">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+            <button type="submit" class="inline-flex items-center px-3 py-1 bg-red-500 text-white rounded-xl shadow-md hover:bg-red-600 active:bg-red-700 font-semibold transition" title="ลบ">
+              ลบ
+            </button>
+          </form>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

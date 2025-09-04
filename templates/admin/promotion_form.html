@@ -1,0 +1,43 @@
+{% extends 'layout.html' %}
+{% block title %}{{ 'แก้ไขโปรโมชัน' if promotion else 'เพิ่มโปรโมชัน' }}{% endblock %}
+{% block content %}
+<div class="max-w-md mx-auto bg-white p-8 rounded-xl shadow mt-8">
+  <h1 class="text-2xl font-bold text-green-900 mb-6 text-center">{{ 'แก้ไขโปรโมชัน' if promotion else 'เพิ่มโปรโมชัน' }}</h1>
+  {% if error %}
+    <div class="mb-4 px-4 py-2 bg-red-100 text-red-700 rounded">{{ error }}</div>
+  {% endif %}
+  <form method="post" enctype="multipart/form-data" autocomplete="off">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <div class="mb-4">
+      <label class="block font-semibold text-gray-700 mb-1">ชื่อโปรโมชัน</label>
+      <input type="text" name="title" class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-green-400" required value="{{ promotion.title if promotion else '' }}">
+    </div>
+    <div class="mb-4">
+      <label class="block font-semibold text-gray-700 mb-1">รายละเอียด</label>
+      <textarea name="description" class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-green-400" required>{{ promotion.description if promotion else '' }}</textarea>
+    </div>
+    <div class="mb-4">
+      <label class="block font-semibold text-gray-700 mb-1">วันที่เริ่ม</label>
+      <input type="date" name="start_date" class="w-full border rounded px-3 py-2" required value="{{ promotion.start_date if promotion else '' }}">
+    </div>
+    <div class="mb-4">
+      <label class="block font-semibold text-gray-700 mb-1">วันที่สิ้นสุด</label>
+      <input type="date" name="end_date" class="w-full border rounded px-3 py-2" required value="{{ promotion.end_date if promotion else '' }}">
+    </div>
+    {% if promotion and promotion.image_url %}
+    <div class="mb-4 flex flex-col items-center">
+      <span class="text-gray-700 mb-1">รูปภาพปัจจุบัน</span>
+      <img src="{{ url_for('static', filename='uploads/promotions/' ~ promotion.image_url) }}" alt="รูปโปรโมชัน" class="max-h-40 rounded shadow border">
+    </div>
+    {% endif %}
+    <div class="mb-6">
+      <label class="block font-medium mb-1">อัปโหลดรูปภาพโปรโมชัน</label>
+      <input type="file" name="promotion_image" accept="image/*" class="w-full border rounded px-3 py-2">
+    </div>
+    <div class="flex justify-end gap-2">
+      <a href="{{ url_for('admin.promotion_list') }}" class="px-4 py-2 rounded bg-gray-200 hover:bg-gray-300">ยกเลิก</a>
+      <button type="submit" class="px-4 py-2 rounded bg-blue-600 text-white hover:bg-blue-700">บันทึก</button>
+    </div>
+  </form>
+</div>
+{% endblock %} 

@@ -1,0 +1,46 @@
+{% extends 'layout.html' %}
+{% block title %}{{ 'แก้ไขผู้ใช้' if user else 'เพิ่มผู้ใช้' }}{% endblock %}
+{% block content %}
+<div class="max-w-md mx-auto bg-white p-8 rounded-xl shadow mt-8">
+  <h1 class="text-2xl font-bold text-green-900 mb-6 text-center">{{ 'แก้ไขผู้ใช้' if user else 'เพิ่มผู้ใช้' }}</h1>
+  {% if error %}
+    <div class="mb-4 px-4 py-2 bg-red-100 text-red-700 rounded">{{ error }}</div>
+  {% endif %}
+  <form method="post" autocomplete="off">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <div class="mb-4">
+      <label class="block font-semibold text-gray-700 mb-1">ชื่อผู้ใช้</label>
+      <input type="text" name="username" class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-green-400" required value="{{ user.username if user else '' }}">
+    </div>
+    <div class="mb-4">
+      <label class="block font-semibold text-gray-700 mb-1">รหัสผ่าน{% if user %} <span class="text-gray-400">(เว้นว่างหากไม่เปลี่ยน)</span>{% endif %}</label>
+      <input type="password" name="password" class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-green-400" {% if not user %}required{% endif %}>
+    </div>
+    <div class="mb-4">
+      <label class="block font-semibold text-gray-700 mb-1">ชื่อ</label>
+      <input type="text" name="first_name" class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-green-400" required value="{{ user.first_name if user else '' }}">
+    </div>
+    <div class="mb-4">
+      <label class="block font-semibold text-gray-700 mb-1">นามสกุล</label>
+      <input type="text" name="last_name" class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-green-400" required value="{{ user.last_name if user else '' }}">
+    </div>
+    <div class="mb-4">
+      <label class="block font-semibold text-gray-700 mb-1">อีเมล</label>
+      <input type="email" name="email" class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-green-400" value="{{ user.email if user else '' }}">
+    </div>
+    <div class="mb-6">
+      <label class="block font-semibold text-gray-700 mb-1">บทบาท</label>
+      <select name="role" class="w-full border rounded px-3 py-2" required>
+        <option value="admin" {% if user and user.role == 'admin' %}selected{% endif %}>admin</option>
+        <option value="staff" {% if user and user.role == 'staff' %}selected{% endif %}>staff</option>
+        <option value="owner" {% if user and user.role == 'owner' %}selected{% endif %}>owner</option>
+        <option value="customer" {% if user and user.role == 'customer' %}selected{% endif %}>customer</option>
+      </select>
+    </div>
+    <div class="flex justify-end gap-2">
+      <a href="{{ url_for('admin.user_list') }}" class="px-4 py-2 rounded bg-gray-200 hover:bg-gray-300">ยกเลิก</a>
+      <button type="submit" class="px-4 py-2 rounded bg-blue-600 text-white hover:bg-blue-700">บันทึก</button>
+    </div>
+  </form>
+</div>
+{% endblock %} 

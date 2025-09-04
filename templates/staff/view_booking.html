@@ -1,0 +1,129 @@
+{% extends "staff/layout.html" %}
+
+{% block title %}ดูรายละเอียดการจอง - TireWeb Staff{% endblock %}
+
+{% block content %}
+<!-- Page Header -->
+<div class="mb-8 pt-8 md:pt-12">
+    <div class="flex items-center justify-between">
+        <div>
+            <h2 class="text-3xl font-bold text-gray-900 mb-2">รายละเอียดการจอง</h2>
+            <p class="text-gray-600">ข้อมูลการจองบริการของลูกค้า</p>
+        </div>
+        <div class="flex space-x-3">
+            <a href="{{ url_for('staff.edit_booking', booking_id=booking.booking_id) }}" 
+               class="inline-flex items-center px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors">
+                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                </svg>
+                แก้ไข
+            </a>
+            <a href="{{ url_for('staff.bookings') }}" 
+               class="inline-flex items-center px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors">
+                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+                </svg>
+                กลับ
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Booking Details -->
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <!-- Customer Information -->
+    <div class="bg-white rounded-xl shadow-sm border p-6">
+        <h3 class="text-lg font-semibold text-gray-900 mb-4">ข้อมูลลูกค้า</h3>
+        <div class="space-y-4">
+            <div>
+                <label class="block text-sm font-medium text-gray-700">ชื่อ-นามสกุล</label>
+                <p class="mt-1 text-sm text-gray-900">{{ booking.customer_name }}</p>
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700">เบอร์โทรศัพท์</label>
+                <p class="mt-1 text-sm text-gray-900">{{ booking.phone }}</p>
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700">อีเมล</label>
+                <p class="mt-1 text-sm text-gray-900">{{ booking.email or 'ไม่ระบุ' }}</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Vehicle Information -->
+    <div class="bg-white rounded-xl shadow-sm border p-6">
+        <h3 class="text-lg font-semibold text-gray-900 mb-4">ข้อมูลรถ</h3>
+        <div class="space-y-4">
+            <div>
+                <label class="block text-sm font-medium text-gray-700">ยี่ห้อ/รุ่น</label>
+                <p class="mt-1 text-sm text-gray-900">{{ booking.vehicle_info }}</p>
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700">ทะเบียนรถ</label>
+                <p class="mt-1 text-sm text-gray-900">{{ booking.license_plate or 'ไม่ระบุ' }}</p>
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700">สี</label>
+                <p class="mt-1 text-sm text-gray-900">{{ booking.color or 'ไม่ระบุ' }}</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Booking Information -->
+    <div class="bg-white rounded-xl shadow-sm border p-6">
+        <h3 class="text-lg font-semibold text-gray-900 mb-4">ข้อมูลการจอง</h3>
+        <div class="space-y-4">
+            <div>
+                <label class="block text-sm font-medium text-gray-700">วันที่จอง</label>
+                <p class="mt-1 text-sm text-gray-900">{{ booking.booking_date }}</p>
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700">สถานะ</label>
+                <div class="mt-1">
+                    {% if booking.status == 'รอดำเนินการ' %}
+                        <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-yellow-100 text-yellow-800">
+                            รอดำเนินการ
+                        </span>
+                    {% elif booking.status == 'สำเร็จ' %}
+                        <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">
+                            สำเร็จ
+                        </span>
+                    {% elif booking.status == 'ยกเลิก' %}
+                        <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-800">
+                            ยกเลิก
+                        </span>
+                    {% endif %}
+                </div>
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700">หมายเหตุ</label>
+                <p class="mt-1 text-sm text-gray-900">{{ booking.note or 'ไม่มี' }}</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Services -->
+    <div class="bg-white rounded-xl shadow-sm border p-6">
+        <h3 class="text-lg font-semibold text-gray-900 mb-4">บริการที่เลือก</h3>
+        {% if services %}
+            <div class="space-y-2">
+                {% for service in services %}
+                    <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                        <div>
+                            <p class="text-sm font-medium text-gray-900">{{ service.service_name }}</p>
+                            <p class="text-xs text-gray-500">{{ service.category }}</p>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p class="text-sm text-gray-500">ไม่มีบริการที่เลือก</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+
+
+
+
