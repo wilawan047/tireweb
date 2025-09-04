@@ -18,6 +18,9 @@ from werkzeug.utils import secure_filename
 # สร้าง Flask app
 app = Flask(__name__)
 app.config.from_object(Config)
+import secrets
+print(secrets.token_hex(32))
+app.secret_key = os.environ.get('SECRET_KEY', secrets.token_hex(32))
 
 # ตั้งค่าการเชื่อมต่อฐานข้อมูล
 # NOTE: ใช้ port 3307 ห้ามแก้กลับเป็น 3306
